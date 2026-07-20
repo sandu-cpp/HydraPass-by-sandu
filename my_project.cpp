@@ -4,6 +4,24 @@
 #include <string> 
 #include <fstream>
 #include <vector>
+#include <cstdlib>
+#include <limits>
+
+
+void clearScreen() {
+#if defined(_WIN32) || defined(_WIN64)
+    std::system("cls");
+#else
+    std::system("clear");
+#endif
+}
+
+
+void pauseScreen() {
+    std::cout << "\nНажмите Enter, чтобы продолжить...";
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::cin.get();
+}
 
 //here main logic all manager
 //здесь находится главный класс который отвечает за всю логику софта
@@ -12,11 +30,8 @@ private:
     std::vector<std::string> serv;
     std::vector<std::string> login;
     std::vector<std::string> password;
-    
-    const std::string secretKey = "XorKey90";
-    const std::string filename = "vault.bin";
-
-    
+    const std::string secretKey = "GjhvvhygefcC{OUSAG$!#@!65";
+    std::string filename; 
     std::string xorCipher(const std::string& data) {
         std::string result = data;
         for (size_t i = 0; i < data.size(); ++i) {
@@ -39,28 +54,28 @@ public:
         login.push_back(l);
         password.push_back(p);
         saveToFile();
-        std::cout << "Успешно сохранено!" << std::endl;
+        std::cout << "\nУспешно сохранено!" << std::endl;
     }
 
     //that functional delete password's
     //здесь функциия удаляет пароль
     void removeLast() {
         if (serv.empty()) {
-            std::cout << "База данных пуста!" << std::endl;
+            std::cout << "\nБаза данных пуста!" << std::endl;
             return;
         }
         serv.pop_back();
         login.pop_back();
         password.pop_back();
         saveToFile();
-        std::cout << "Последняя запись удалена!" << std::endl;
+        std::cout << "\nПоследняя запись удалена!" << std::endl;
     }
 
     //here we can output all youre password
     //здесь ты можешь увидеть все свои пароли
     void viewAll() {
         if (serv.empty()) {
-            std::cout << "У вас нет сохраненных паролей." << std::endl;
+            std::cout << "\nУ вас нет сохраненных паролей." << std::endl;
             return;
         }
         std::cout << "\n--- СПИСОК ПАРОЛЕЙ ---" << std::endl;
@@ -69,7 +84,7 @@ public:
                       << " | Логин: " << login[i] 
                       << " | Пароль: " << password[i] << std::endl;
         }
-        std::cout << "----------------------\n" << std::endl;
+        std::cout << "----------------------" << std::endl;
     }
 
     //that funnc save all you password
@@ -129,47 +144,70 @@ public:
 };
 
 int main() {
+    
+#if defined(_WIN32) || defined(_WIN64)
+    std::system("chcp 65001 > nul");
+#endif
+
     PasswordManager manager;
     bool runtime = true;
 
     while (runtime) {
-        int choice;
+        clearScreen(); 
 
         std::cout << "Приветствую! я твой менеджер паролей ;)" << std::endl;
         std::cout << "[1] Добавить пароль" << std::endl;
         std::cout << "[2] Удалить пароль (последний)" << std::endl;
         std::cout << "[3] Посмотреть пароли" << std::endl;
         std::cout << "[0] Выход" << std::endl;
+        std::cout << "Выберите действие: ";
 
+        int choice;
         std::cin >> choice;
 
+        
+        if (std::cin.fail()) {
+            std::cin.clear(); 
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << "\nОшибка: вводите только цифры!" << std::endl;
+            pauseScreen();
+            continue;
+        }
+
         if (choice == 0) {
-            std::cout << "Пока!" << std::endl;
+            clearScreen();
+            std::cout << "Пока! :(" << std::endl;
             runtime = false;
             return 0;
         }
 
         if (choice == 1) {
+            clearScreen();
             std::string s, l, p;
+            std::cout << "=== ДОБАВЛЕНИЕ ПАРОЛЯ ===" << std::endl;
             std::cout << "Введите сервис: "; std::cin >> s;
             std::cout << "Введите логин: ";  std::cin >> l;
             std::cout << "Введите пароль: "; std::cin >> p;
             manager.add(s, l, p);
+            pauseScreen();
         }
 
-        if (choice == 2) {
+        else if (choice == 2) {
+            clearScreen();
             manager.removeLast();
+            pauseScreen();
         }
 
-        if (choice == 3) {
+        else if (choice == 3) {
+            clearScreen();
             manager.viewAll();
+            pauseScreen();
         }
 
-        if (choice >= 4) {
-            std::cout << "Такой опции нет! :(" << std::endl;
+        else if (choice >= 4) {
+            std::cout << "\nТакой опции нет! :(" << std::endl;
+            pauseScreen();
         }
     }
     return 0;
 }
-//i did it manager just for fun but if you rate my project i can did update! maybe i did AES-256 :)
-//я сделал этот менеджер по фану но если вам понравится я смогу его обновлять! может быть я сделаю шифрование AES-256 :)
