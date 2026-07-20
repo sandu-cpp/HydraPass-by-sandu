@@ -1,0 +1,5 @@
+HydraPass
+vault.bin
+.hydrapass_vault.bin
+*.bin
+a.out
