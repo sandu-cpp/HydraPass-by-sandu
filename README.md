@@ -1,4 +1,4 @@
-Hello Frined! 👋 im begginers developer C++ 💻 and i make my first project for up my skills ⬆️ ;)
+Hello Friend! 👋 im begginers developer C++ 💻 and i make my first project for up my skills ⬆️ ;)
 soft full open-source 📄
 ----------------------------------------------------------------------------------------------------
 Привет Друг! 👋 я начинающий С++ разработчик 💻 и я сделал мой первый проект для развития ⬆️ ;)
